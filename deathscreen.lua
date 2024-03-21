@@ -178,6 +178,10 @@ function StartDeathTimer()
                 TriggerEvent('revive')
             end
 
+            if not IsEntityDead(PlayerPedId()) then
+                TriggerEvent('revive')
+            end
+
             Citizen.Wait(10)
         end
 
