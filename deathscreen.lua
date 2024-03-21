@@ -145,7 +145,7 @@ function StartDeathTimer()
     end)
 
     CreateThread(function()
-        local text, timeHeld = nil, 0
+        local text, timeHeld, pressed = nil, 0, false
 
         -- early respawn timer
         while bleedoutTimer > 0 and isDead do
@@ -155,11 +155,10 @@ function StartDeathTimer()
             EnableControlAction(0, 38, true) -- E
             ProcessCamControls()
 
-            Wait(0)
             if timeHeld < 2 then
                 text = string.format("Appuyer sur ~r~[E]~w~ pour respawn\nRéanimation auto dans %s:%s",secondsToClock(bleedoutTimer)) -- ('respawn_available_in', )
             else
-                text = string.format("Reste appuyer sur ~r~[E]~w~\nRéanimation en cours%s",threedots(timeHeld))
+                text = string.format("\nRéanimation en cours%s",threedots(timeHeld))
             end
 
             DrawGenericTextThisFrame()
@@ -167,15 +166,23 @@ function StartDeathTimer()
             AddTextComponentSubstringPlayerName(text)
             EndTextCommandDisplayText(0.5, 0.8)
 
-            if IsControlPressed(0, 38) then
-                timeHeld = timeHeld + 1
-            else
-                timeHeld = 0
+            if IsControlJustPressed(0, 38) then
+                pressed = true
             end
 
-            if IsControlPressed(0, 38) and timeHeld > 250 then
+            if pressed then
+                timeHeld = timeHeld + 10
+            end
+
+            if IsControlPressed(0, 38) and timeHeld > 25 then
                 TriggerEvent('revive')
             end
+
+            if not IsEntityDead(PlayerPedId()) then
+                TriggerEvent('revive')
+            end
+
+            Citizen.Wait(10)
         end
 
         if IsEntityDead(PlayerPedId()) then
