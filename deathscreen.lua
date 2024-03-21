@@ -126,7 +126,7 @@ function OnPlayerDeath()
 end
 
 local function threedots(value)
-    return string.rep(".",value//30%4)
+    return string.rep(".",value//300%4)
 end
 
 function StartDeathTimer()
@@ -174,11 +174,7 @@ function StartDeathTimer()
                 timeHeld = timeHeld + 10
             end
 
-            if IsControlPressed(0, 38) and timeHeld > 25 then
-                TriggerEvent('revive')
-            end
-
-            if not IsEntityDead(PlayerPedId()) then
+            if timeHeld > 2500 then
                 TriggerEvent('revive')
             end
 
