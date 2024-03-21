@@ -179,7 +179,7 @@ function StartDeathTimer()
             end
 
             if not IsEntityDead(PlayerPedId()) then
-                TriggerEvent('revive')
+                TriggerEvent('revive', true)
             end
 
             Citizen.Wait(10)
@@ -201,7 +201,7 @@ function RespawnPed(ped, coords, heading)
 end
 
 RegisterNetEvent('revive')
-AddEventHandler('revive', function()
+AddEventHandler('revive', function(dontHeal)
     local playerPed = PlayerPedId()
     local coords = GetEntityCoords(playerPed)
 
@@ -211,7 +211,10 @@ AddEventHandler('revive', function()
         Wait(50)
     end
 
-    RespawnPed(playerPed, coords, 0.0)
+    if not dontHeal then
+        RespawnPed(playerPed, coords, 0.0)
+    end
+
     isDead = false
     ClearTimecycleModifier()
     SetPedMotionBlur(playerPed, false)
